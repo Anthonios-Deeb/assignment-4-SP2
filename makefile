@@ -1,9 +1,12 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra
 
-all: demo
+all: demo test
 
 demo: Demo.o Tree.o Node.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+test: test.o Tree.o Node.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 Demo.o: Demo.cpp Tree.hpp Node.hpp

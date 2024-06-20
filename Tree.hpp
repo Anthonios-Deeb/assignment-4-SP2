@@ -5,6 +5,7 @@
 
 #include "PreOrderIterator.hpp"
 #include "InOrderIterator.hpp"
+#include "PostOrderIterator.hpp"
 
 using namespace std;
 template <typename T>
@@ -81,19 +82,21 @@ public:
     return InOrderIterator<T>(nullptr);
   }
 
-  InOrderIterator<T> begin_post_order()
+  PostOrderIterator<T> begin_post_order()
   {
     if (max_children == 2)
     {
-      return InOrderIterator<T>(this);
+      return PostOrderIterator<T>(this);
     }
   }
 
-  InOrderIterator<T> end_post_order()
+  PostOrderIterator<T> end_post_order()
   {
-    return InOrderIterator<T>(nullptr);
+    return PostOrderIterator<T>(nullptr);
   }
-  
+
+
+
 
 
 private:

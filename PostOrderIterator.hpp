@@ -20,12 +20,15 @@ private:
   {
     while (node != nullptr)
     {
-      if (node->getRight() != nullptr)
-      {
-        nodeStack.push(node->getRight());
-      }
       nodeStack.push(node);
-      node = node->getLeft();
+      if (node->getLeft() != nullptr)
+      {
+        node = node->getLeft();
+      }
+      else
+      {
+        node = node->getRight();
+      }
     }
   }
 
@@ -49,11 +52,9 @@ public:
     {
       Node<T> *node = nodeStack.top();
       nodeStack.pop();
-      if (!nodeStack.empty() && nodeStack.top() == node->getRight())
+      if (!nodeStack.empty() && nodeStack.top()->getLeft() == node)
       {
-        node = nodeStack.top();
-        nodeStack.pop();
-        findNextLeaf(node->getRight());
+        findNextLeaf(nodeStack.top()->getRight());
       }
     }
     return *this;
@@ -66,7 +67,7 @@ public:
 
   T *get_value()
   {
-    return &nodeStack.top()->getValue();
+    return nodeStack.top()->getValue();
   }
 };
 
