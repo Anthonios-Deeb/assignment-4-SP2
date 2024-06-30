@@ -4,7 +4,7 @@ ITTRA = TreeIterator.hpp InOrderIterator.hpp DFSIterator.hpp
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 all: demo test
 
-demo: Demo.o Tree.o Node.o 
+demo: Demo.o Tree.o Node.o $(LDFLAGS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 test: test.o Tree.o Node.o
@@ -13,7 +13,7 @@ test: test.o Tree.o Node.o
 Demo.o: Demo.cpp Tree.hpp Node.hpp
 	$(CXX) $(CXXFLAGS) -c Demo.cpp
 
-Tree.o: Tree.cpp Tree.hpp Node.o $(ITTRA) $(LDFLAGS)
+Tree.o: Tree.cpp Tree.hpp Node.o $(ITTRA)
 	$(CXX) $(CXXFLAGS) -c Tree.cpp
 
 Node.o: Node.cpp Node.hpp

@@ -11,7 +11,7 @@
 #include "DFSIterator.hpp"
 #include <SFML/Graphics.hpp>
 
-
+using namespace sf;
 using namespace std;
 
 template <typename T, int N = 2>
@@ -209,6 +209,46 @@ public:
 
   // -------------------------------------
 
+  void drawNode(sf::RenderWindow &window, Node<T> *node, float x, float y, float horizontalOffset) const
+  {
+    if (!node)
+    {
+      return;
+    }
+
+    sf::CircleShape shape(20);
+    shape.setFillColor(sf::Color::Green);
+    shape.setPosition(x - shape.getRadius(), y - shape.getRadius());
+    window.draw(shape);
+
+    sf::Font font;
+    if (!font.loadFromFile("/usr/share/fonts/truetype/msttcorefonts/arial.ttf"))
+    {
+      
+    }
+
+    sf::Text text;
+    text.setFont(font);
+    text.setString(to_string(*node->getValue()));
+    text.setCharacterSize(20);
+    text.setFillColor(sf::Color::Black);
+    text.setPosition(x - 10, y - 15);
+    window.draw(text);
+
+    float childX = x - horizontalOffset;
+    for (Node<T> *child : *node->get_children())
+    {
+      sf::Vertex line[] =
+          {
+              sf::Vertex(sf::Vector2f(x, y)),
+              sf::Vertex(sf::Vector2f(childX, y + 100))};
+      window.draw(line, 2, sf::Lines);
+
+      drawNode(window, child, childX, y + 100, horizontalOffset / 2);
+      childX += 2 * horizontalOffset / (node->get_children()->size() - 1);
+    }
+  }
+
   void draw(sf::RenderWindow &window) const
   {
     if (root != nullptr)
@@ -220,6 +260,8 @@ public:
   friend ostream &operator<<(ostream &os, const Tree<T, N> &tree)
   {
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Tree Visualization");
+
+    window.setVerticalSyncEnabled(true);
 
     while (window.isOpen())
     {
