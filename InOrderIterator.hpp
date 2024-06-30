@@ -4,14 +4,17 @@
 #include <stack>
 using namespace std;
 
-template <typename T>
+template <typename T,int N>
 class Tree;
 
 template <typename T>
 class Node;
 
-template <typename T>
-class InOrderIterator
+template <typename T,int N>
+class TreeIterator;
+
+template <typename T,int N=2>
+class InOrderIterator : public TreeIterator<T,N>
 {
 private:
   stack<Node<T> *> nodeStack;
@@ -27,7 +30,7 @@ private:
   }
 
 public:
-  InOrderIterator(Tree<T> *tree) : nodeStack(stack<Node<T> *>())
+  InOrderIterator(Tree<T,N> *tree) : nodeStack(stack<Node<T> *>())
   {
     if (tree != nullptr)
     {
@@ -35,12 +38,12 @@ public:
     }
   }
 
-  T &operator*()
+  T* operator*() override
   {
     return nodeStack.top()->getValue();
   }
 
-  InOrderIterator<T> &operator++()
+  InOrderIterator<T,N> &operator++() override
   {
     if (!nodeStack.empty())
     {
@@ -51,12 +54,12 @@ public:
     return *this;
   }
 
-  bool operator!=(const InOrderIterator<T> &other)
+  bool operator!=(const TreeIterator<T,N> &other) override
   {
-    return nodeStack.size() != other.nodeStack.size();
+    return nodeStack.size() != dynamic_cast<const InOrderIterator<T,N> &>(other).nodeStack.size();
   }
 
-  T *get_value()
+  T *get_value() override
   {
     return nodeStack.top()->getValue();
   }

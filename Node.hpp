@@ -78,9 +78,6 @@ public:
     return nullptr;
   }
 
-
-
-
 private:
   T* value; //the key of the node is unknown, so we use a template
   vector<Node<T> *>* children;

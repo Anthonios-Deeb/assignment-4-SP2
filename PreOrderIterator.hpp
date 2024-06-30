@@ -4,60 +4,67 @@
 #include <stack>
 using namespace std;
 
-template <typename T>
+#include "TreeIterator.hpp"
+
+template <typename T, int N>
 class Tree;
 
 template <typename T>
 class Node;
 
-template <typename T>
-class PreOrderIterator
+template <typename T, int N = 2>
+
+class PreOrderIterator : public TreeIterator<T, N>
 {
 private:
-  stack<Node<T>*> nodeStack;
+  stack<Node<T> *> nodeStack;
 
 public:
-
-  PreOrderIterator(Tree<T> *tree) : nodeStack(stack<Node<T> *>())
+  PreOrderIterator(Tree<T, N> *tree) : nodeStack(stack<Node<T> *>())
   {
-    if (tree != nullptr)
+    if (tree != nullptr && tree->get_root() != nullptr)
     {
       Node<T> *root = tree->get_root();
       this->nodeStack.push(root);
     }
   }
 
-  T &operator*()
+  T *operator*() override
   {
+    if (nodeStack.empty())
+    {
+      return nullptr;
+    }
     return nodeStack.top()->getValue();
   }
 
-  PreOrderIterator<T> &operator++()
+  PreOrderIterator<T, N> &operator++() override
   {
-    Node<T> *node = nodeStack.top();
-    nodeStack.pop();
-    vector<Node<T> *>* children = node->get_children();
-
-    for (int i = children->size() - 1; i >= 0; i--)
+    if (!nodeStack.empty())
     {
-      if (children->at(i) != nullptr)
+      Node<T> *node = nodeStack.top();
+      nodeStack.pop();
+      vector<Node<T> *> *children = node->get_children();
+
+      for (int i = children->size() - 1; i >= 0; i--)
       {
-        nodeStack.push(children->at(i));
+        if (children->at(i) != nullptr)
+        {
+          nodeStack.push(children->at(i));
+        }
       }
     }
-
     return *this;
   }
 
-  bool operator!=(const PreOrderIterator<T> &other)
+  bool operator!=(const TreeIterator<T, N> &other) override
   {
-    return nodeStack.size() != other.nodeStack.size();
+    return nodeStack.size() != dynamic_cast<const PreOrderIterator<T, N> &>(other).nodeStack.size();
   }
 
-  T* get_value()
+  T *get_value() override
   {
     return nodeStack.top()->getValue();
   }
-
 };
 #endif // PREORDERITERATOR_HPP
