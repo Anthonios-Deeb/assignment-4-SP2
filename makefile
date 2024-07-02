@@ -1,28 +1,40 @@
+# Email: anthoniosdb@gmail.com
+# 3993
+
+# Compiler and flags
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -g
-ITTRA = TreeIterator.hpp InOrderIterator.hpp DFSIterator.hpp
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
-all: demo test
 
-demo: Demo.o Tree.o Node.o $(LDFLAGS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+# Source and header files
+SRCS = main.cpp Complex.cpp
+HEADERS = Tree.hpp Node.hpp Complex.hpp
+TEST_SRCS = test.cpp
 
-test: test.o Tree.o Node.o
-	$(CXX) $(CXXFLAGS) -o $@ $^
+# Executable names
+RUN = tree
+TEST = test
 
-Demo.o: Demo.cpp Tree.hpp Node.hpp
-	$(CXX) $(CXXFLAGS) -c Demo.cpp
+# Default target: build all executables
+all: $(RUN) $(TEST) 
 
-Tree.o: Tree.cpp Tree.hpp Node.o $(ITTRA)
-	$(CXX) $(CXXFLAGS) -c Tree.cpp
+# Build and run the main tree executable
+tree: main.o Complex.o
+	$(CXX) $(CXXFLAGS) -o $(RUN) $^ $(LDFLAGS)
+	./$(RUN)
 
-Node.o: Node.cpp Node.hpp
-	$(CXX) $(CXXFLAGS) -c Node.cpp
+# Build and run the test executable
+test: test.o Complex.o
+	$(CXX) $(CXXFLAGS) -o $(TEST) $^ $(LDFLAGS)
+	./$(TEST)
 
-test.o: test.cpp Tree.hpp Node.hpp
-	$(CXX) $(CXXFLAGS) -c test.cpp
+# Compile object files
+%.o: %.cpp $(HEADERS)
+	$(CXX) $(CXXFLAGS) -c $<
 
-.PHONY: clean all
+# Phony targets
+.PHONY: clean all test tree
 
+# Clean up build artifacts
 clean:
-	rm -f demo *.o test
+	rm -f $(RUN) $(TEST) *.o

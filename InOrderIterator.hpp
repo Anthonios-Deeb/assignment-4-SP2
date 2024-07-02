@@ -1,3 +1,5 @@
+// anthoniosdb@gmail.com
+// 3993
 #ifndef InORDERITERATOR_HPP
 #define InORDERITERATOR_HPP
 
@@ -19,13 +21,14 @@ class InOrderIterator : public TreeIterator<T,N>
 private:
   stack<Node<T> *> nodeStack;
 
+  // Find the next leaf node
   void findNextLeaf(Node<T> *start)
   {
-    Node<T> *current = start;
-    while (current != nullptr)
+    Node<T> *current = start; // Start from the given node
+    while (current != nullptr) // Traverse the left subtree
     {
-      nodeStack.push(current);
-      current = current->getLeft();
+      nodeStack.push(current); // Push the current node to the stack
+      current = current->getLeft(); // Move to the left child
     }
   }
 
@@ -34,15 +37,13 @@ public:
   {
     if (tree != nullptr)
     {
-      findNextLeaf(tree->get_root());
+      findNextLeaf(tree->get_root()); // Find the leftmost leaf node
     }
   }
 
-  T* operator*() override
-  {
-    return nodeStack.top()->getValue();
-  }
+  ~InOrderIterator() override = default;
 
+  // Prefix increment operator
   InOrderIterator<T,N> &operator++() override
   {
     if (!nodeStack.empty())

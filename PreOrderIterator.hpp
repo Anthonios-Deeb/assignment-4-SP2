@@ -1,3 +1,5 @@
+// anthoniosdb@gmail.com
+// 3993
 #ifndef PREORDERITERATOR_HPP
 #define PREORDERITERATOR_HPP
 
@@ -29,14 +31,7 @@ public:
     }
   }
 
-  T *operator*() override
-  {
-    if (nodeStack.empty())
-    {
-      return nullptr;
-    }
-    return nodeStack.top()->getValue();
-  }
+   ~PreOrderIterator() override = default;
 
   PreOrderIterator<T, N> &operator++() override
   {

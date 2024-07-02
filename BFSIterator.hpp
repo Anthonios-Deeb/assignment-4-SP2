@@ -1,65 +1,66 @@
+// anthoniosdb@gmail.com
+// 3993
 #ifndef BFSITERATOR_HPP
 #define BFSITERATOR_HPP
 
 #include <queue>
 
-
 using namespace std;
 
-template <typename T,int N>
+template <typename T, int N>
 class Tree;
 
 template <typename T>
 class Node;
 
-template <typename T,int N=2>
+template <typename T, int N = 2>
 class BFSIterator
 {
 private:
   queue<Node<T> *> nodeQueue;
 
-  void BFS()
+  void BFS() // Breadth First Search
   {
-    Node<T> *current = nodeQueue.front();
-    nodeQueue.pop();
 
-    for (Node<T> *child : *current->get_children())
+    Node<T> *current = nodeQueue.front(); // Get the front of the queue
+    nodeQueue.pop();                      // Remove the front of the queue
+
+    for (Node<T> *child : *current->get_children()) // Add all the children of the current node to the queue
     {
       if (child != nullptr)
       {
-        nodeQueue.push(child);
+        nodeQueue.push(child); // Add the child to the queue
       }
     }
   }
 
 public:
-  BFSIterator(Tree<T,N> *tree) : nodeQueue(queue<Node<T> *>())
+  // Constructor
+  BFSIterator(Tree<T, N> *tree) : nodeQueue(queue<Node<T> *>())
   {
-    if (tree != nullptr && tree->get_root() != nullptr)
+    if (tree != nullptr && tree->get_root() != nullptr) // If the tree is not empty and the root is not empty
     {
       nodeQueue.push(tree->get_root());
     }
   }
 
-  T &operator*()
-  {
-    return nodeQueue.front()->getValue();
-  }
-
-  BFSIterator<T,N> &operator++()
+  // Prefix increment operator
+  BFSIterator<T, N> &operator++()
   {
     if (!nodeQueue.empty())
     {
-      BFS();
+      BFS(); // Perform the BFS
     }
     return *this;
   }
 
-  virtual bool operator!=(const BFSIterator<T,N> &other)
+  // Dereference operator
+  virtual bool operator!=(const BFSIterator<T, N> &other)
   {
-    return nodeQueue.size() != other.nodeQueue.size();
+    return nodeQueue.size() != other.nodeQueue.size(); // Check if the size of the queue is different
   }
 
+  // return the value of the current node
   T *get_value()
   {
     return nodeQueue.front()->getValue();
